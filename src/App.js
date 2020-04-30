@@ -13,6 +13,7 @@ function App() {
 
   const apiurl = "https://www.omdbapi.com/?i=tt3896198&apikey=497f0f67";
 
+  /* Function to search for movie name from the API*/
   const search = (e) => {
     if (e.key === "Enter") {
       axios(apiurl + "&s=" + state.searchTerm).then((data) => {
@@ -21,6 +22,7 @@ function App() {
     }
   };
 
+  /* Function to handle input of movie name in the search boxes*/
   const handleInput = (e) => {
     let searchTerm = e.target.value;
 
