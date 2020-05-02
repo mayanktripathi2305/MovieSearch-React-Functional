@@ -1,42 +1,60 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Header from "./Components/Header";
 import Search from "./Components/Search";
+import Movie from "./Components/Movie";
 
-function App() {
-  const [state, setstate] = useState({
-    searchTerm: "",
-    results: [],
-    selected: {},
-  });
+const apiurl = "http://www.omdbapi.com/?apikey=497f0f67";
 
-  const apiurl = "https://www.omdbapi.com/?i=tt3896198&apikey=497f0f67";
+const App = () => {
+  const [loading, setloading] = useState(true);
+  const [movies, setMovies] = useState([]);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  /* Function to search for movie name from the API*/
-  const search = (e) => {
-    if (e.key === "Enter") {
-      axios(apiurl + "&s=" + state.searchTerm).then((data) => {
-        console.log(data);
+  useEffect(() => {
+    fetch(apiurl)
+      .then((response) => response.json())
+      .then((result) => {
+        setloading(false);
+        //setMovies(result.Search);
       });
-    }
-  };
+  }, []);
 
-  /* Function to handle input of movie name in the search boxes*/
-  const handleInput = (e) => {
-    let searchTerm = e.target.value;
+  const search = (searchValue) => {
+    setloading(false);
+    setErrorMessage(null);
 
-    setstate((prevState) => {
-      return { ...prevState, searchTerm: searchTerm };
-    });
+    fetch(apiurl + "&s=" + searchValue)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.Response === "True") {
+          setloading(false);
+          setMovies(result.Search);
+        } else {
+          setErrorMessage(result.Error);
+          setloading(false);
+        }
+      });
   };
 
   return (
     <div className="App">
-      <Header />
-      <Search handleInput={handleInput} search={search} />
+      <Header text="B()()KED" />
+      <p className="Intro">Search Movies without any Ads</p>
+      <Search search={search} />
+
+      <div className="movies">
+        {loading && !errorMessage ? (
+          <span>loading...</span>
+        ) : errorMessage ? (
+          <div className="errorMessage">{errorMessage}</div>
+        ) : (
+          movies.map((movie, index) => (
+            <Movie key={`${index}-${movie.Title}`} movie={movie} />
+          ))
+        )}
+      </div>
     </div>
   );
-}
-
+};
 export default App;
