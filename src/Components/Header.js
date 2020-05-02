@@ -1,10 +1,10 @@
 import React from "react";
 
-function Header() {
+function Header(props) {
   return (
-    <div>
-      <h1 className="AppHeader">MoviesDB Search</h1>
-    </div>
+    <header className="AppHeader">
+      <h1>{props.text}</h1>
+    </header>
   );
 }
 

@@ -1,21 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 
-function Search({ handleInput, search }) {
+const Search = (props) => {
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleInputChanges = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const resetInputField = () => {
+    setSearchValue("");
+  };
+
+  const onSearchSubmit = (e) => {
+    e.preventDefault();
+    props.search(searchValue);
+    resetInputField();
+  };
+
   return (
-    <div>
-      <section>
-        <form>
-          <input
-            type="text"
-            placeholder="Enter your movie search"
-            className="Search"
-            onChange={handleInput}
-            onKeyPress={search}
-          />
-        </form>
-      </section>
-    </div>
+    <form className="Search">
+      <input value={searchValue} type="text" onChange={handleInputChanges} />
+      <input value="Search" type="submit" onClick={onSearchSubmit} />
+    </form>
   );
-}
+};
 
 export default Search;
